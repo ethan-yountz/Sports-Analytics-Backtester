@@ -1,6 +1,6 @@
 import math
 from .base import Strategy, BetDecision
-from ..Bankroll import kelly_stake
+from ..bankroll import kelly_stake
 
 class SimpleKelly(Strategy):
     name = "SimpleKelly"
@@ -12,7 +12,7 @@ class SimpleKelly(Strategy):
         if not (0 < p < 1): return BetDecision(0, False)
         # edge threshold vs fair (decimal odds)
         # expected value per $1: p*(b) - (1-p); require EV > min_edge
-        from ..Utils import payout_per_unit
+        from ..utils import payout_per_unit
         b = payout_per_unit(int(row["odds"]))
         ev = p*b - (1-p)
         if ev <= self.min_edge: return BetDecision(0, False)
