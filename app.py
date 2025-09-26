@@ -29,7 +29,8 @@ run = st.button('Run Simulation')
 
 
 if run:
-    bets, equity = run_backtest(Df, finalstrat, bankroll)
+    with st.spinner("Running backtest…"):
+        bets, equity = run_backtest(Df, finalstrat, bankroll)
 
     left, right = st.columns([1, 1], gap="large")
 
@@ -58,6 +59,16 @@ if run:
         )
         .properties(height=260)
     )
+
+    start_rule = (
+        alt.Chart(pd.DataFrame({"y": [float(bankroll)]}))
+        .mark_rule(strokeDash=[4, 4])
+        .encode(y="y:Q")
+    )
+
+    with right:
+        st.caption("Equity Curve")
+        st.altair_chart(equity_line + start_rule, use_container_width=True)
 
     start_rule = (
         alt.Chart(pd.DataFrame({"y": [float(bankroll)]}))
