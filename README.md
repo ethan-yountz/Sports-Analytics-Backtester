@@ -1,7 +1,4 @@
 # 🏀 Sports Analytics Backtester
-
-A Streamlit-powered tool for testing sports betting strategies on historical data.
-
 ---
 
 ## 🚀 Try It Out
