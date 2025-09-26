@@ -26,10 +26,10 @@ def resource_path(rel: str) -> Path:
 def main():
     ap = argparse.ArgumentParser(description="backtest info")
 
-    ap.add_argument("--data", default=None,
-                    help="Path to CSV (default: bundled Data/Processed/games_clean.csv)")
+    ap.add_argument("--data", default=resource_path("Data/Processed/games_clean.csv"),
+                    help="Path to CSV (default:Data/Processed/games_clean.csv)")
     ap.add_argument("--start", type=float, default=100.0,
-                    help="Starting bankroll (default: 1000)")
+                    help="Starting bankroll (default: 100)")
     ap.add_argument("--unit", type=float, default=1.0,
                     help="Flat stake size per bet (default: 1.0)")
     ap.add_argument("--strat", type=Strategy, default=FlatUnderdog,
@@ -39,14 +39,7 @@ def main():
 
     args = ap.parse_args()
 
-    # Use bundled CSV if --data not supplied
-    if args.data is None:
-        data_path = resource_path("Data/Processed/games_clean.csv")
-    else:
-        p = Path(args.data)
-        data_path = p if p.is_absolute() else (Path.cwd() / p).resolve()
-
-    df = load_games(str(data_path))
+    df = load_games(str(args.data))
 
     strat = args.strat(unit=args.unit)
 
@@ -54,13 +47,11 @@ def main():
 
     # Metrics
     print(f"Strategy: {args.strat.name}")
-    print(f"Data: {data_path}")
+    print(f"Data: {args.data}")
     print(f"Total bets: {len(bets)}")
-    if len(equity) > 0:
-        print(f"Final bankroll: {equity.iloc[-1]:.2f}")
-    if len(bets) > 0:
-        print(f"ROI: {roi(bets['pnl'], bets['stake']) * 100:.2f}%")
-        print(f"Win rate: {win_rate(bets['result']):.3f}")
+    print(f"Final bankroll: {equity.iloc[-1]:.2f}")
+    print(f"ROI: {roi(bets['pnl'], bets['stake']) * 100:.2f}%")
+    print(f"Win rate: {win_rate(bets['result']):.3f}")
     print(f"Max drawdown: {max_drawdown(equity):.3f}")
 
 if __name__ == "__main__":
