@@ -1,5 +1,5 @@
 import pandas as pd
-from .utils import payout_per_unit  # net profit per 1 unit from American odds
+from SRC.utils import payout_per_unit  # net profit per 1 unit from American odds
 
 def _win_profit(stake: float, odds: int) -> float:
     return stake * payout_per_unit(int(odds))
