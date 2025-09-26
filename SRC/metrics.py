@@ -16,23 +16,14 @@ def max_drawdown(equity: pd.Series) -> float:
 
 
 def win_rate(results: pd.Series) -> float:
-    """
-    Works with:
-      - numeric {0,1}
-      - booleans
-      - strings like 'W'/'L', 'win'/'loss', '1'/'0', 'true'/'false'
-    """
-    # Boolean dtype
     if pd.api.types.is_bool_dtype(results):
         return float(results.mean())
 
-    # Numeric dtype (ints/floats containing 0/1)
     if pd.api.types.is_numeric_dtype(results):
         s = pd.to_numeric(results, errors="coerce").dropna()
         s = s[(s == 0) | (s == 1)]
         return float((s == 1).mean()) if len(s) else 0.0
 
-    # Strings
     r = results.astype(str).str.strip().str.upper()
     valid = r.isin(["W", "WIN", "L", "LOSS", "TRUE", "FALSE", "1", "0"])
     r = r[valid]
