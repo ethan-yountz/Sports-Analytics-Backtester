@@ -1,8 +1,8 @@
 # 🏀 Sports Analytics Backtester
 ---
 
-## 🚀 Try It Out
+## Linked Below
 
-"https://sports-analytics-backtester.streamlit.app/
+https://sports-analytics-backtester.streamlit.app/
 
 ---
