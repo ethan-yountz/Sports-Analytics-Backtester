@@ -17,9 +17,11 @@ from SRC.backtester import run_backtest
 from SRC.metrics import roi, max_drawdown, win_rate
 from SRC.plotting import plot_equity
 
-def resource_path(rel_path: str) -> Path:
-    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[1]))
-    return (base / rel_path).resolve()
+def resource_path(rel: str) -> Path:
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    if not hasattr(sys, "_MEIPASS"):
+        base = Path(__file__).resolve().parent.parent
+    return (base / rel).resolve()
 
 def main():
     ap = argparse.ArgumentParser(description="backtest info")
@@ -46,7 +48,6 @@ def main():
 
     df = load_games(str(data_path))
 
-    # Instantiate the strategy class
     strat = args.strat(unit=args.unit)
 
     bets, equity = run_backtest(df, strat, start_bankroll=args.start)
