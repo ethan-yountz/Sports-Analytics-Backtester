@@ -69,13 +69,3 @@ if run:
     with right:
         st.caption("Equity Curve")
         st.altair_chart(equity_line + start_rule, use_container_width=True)
-
-    start_rule = (
-        alt.Chart(pd.DataFrame({"y": [float(bankroll)]}))
-        .mark_rule(strokeDash=[4, 4])
-        .encode(y="y:Q")
-    )
-
-    with right:
-        st.caption("Equity Curve")
-        st.altair_chart(equity_line + start_rule, use_container_width=True)
