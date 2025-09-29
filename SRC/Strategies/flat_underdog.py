@@ -1,4 +1,4 @@
-from .base import Strategy, BetDecision
+from SRC.Strategies.base import Strategy, BetDecision
 
 class FlatUnderdog(Strategy):
     name = "FlatUnderdog"

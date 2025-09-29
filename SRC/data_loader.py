@@ -2,6 +2,9 @@ import pandas as pd
 
 REQUIRED = ["date","selection","odds","result"]
 
+# Optional columns for different bet types
+OVER_UNDER_COLUMNS = ["ou_line", "ou_odds", "ou_result"]
+
 def load_games(path: str) -> pd.DataFrame:
     df = pd.read_csv(path, parse_dates=["date"])
     missing = [c for c in REQUIRED if c not in df.columns]

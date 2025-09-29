@@ -1,4 +1,4 @@
-from .utils import kelly_fraction
+from SRC.utils import kelly_fraction
 
 def flat_stake(bankroll: float, unit: float=1.0) -> float:
     return min(unit, bankroll)

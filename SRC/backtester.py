@@ -1,8 +1,47 @@
 import pandas as pd
 from SRC.utils import payout_per_unit  # net profit per 1 unit from American odds
+from SRC.bet_types import BetType, BetSide
 
 def _win_profit(stake: float, odds: int) -> float:
     return stake * payout_per_unit(int(odds))
+
+def _determine_bet_result(row, decision):
+    bet_type = decision.bet_type
+    bet_side = decision.bet_side
+    
+    if bet_type == BetType.MONEYLINE:
+        return int(row["result"])  # 1 = win, 0 = loss
+    
+    elif bet_type == BetType.OVER_UNDER:
+        if "ou_result" not in row:
+            return 0
+        
+        ou_result = row["ou_result"]
+        if bet_side == BetSide.OVER:
+            if ou_result > 0:
+                return 1
+            elif ou_result == 0:
+                return 0.5
+            else:
+                return 0
+        elif bet_side == BetSide.UNDER:
+            if ou_result < 0:
+                return 1
+            elif ou_result == 0:
+                return 0.5
+            else:
+                return 0
+        else:
+            return 0
+    
+    return 0
+
+def _get_odds_for_bet_type(row, bet_type):
+    if bet_type == BetType.MONEYLINE:
+        return row.get("odds")
+    elif bet_type == BetType.OVER_UNDER:
+        return row.get("ou_odds")
+    return row.get("odds")
 
 def run_backtest(df: pd.DataFrame, strategy, start_bankroll: float = 1000.0):
     df_iter = df.sort_values("date").reset_index(drop=True)
@@ -24,12 +63,17 @@ def run_backtest(df: pd.DataFrame, strategy, start_bankroll: float = 1000.0):
         stake = min(raw_stake, bankroll)
 
         try:
-            odds = int(row["odds"])
-            res  = int(row["result"])  # 1 = win, 0 = loss
+            odds = int(_get_odds_for_bet_type(row, decision.bet_type))
+            res = _determine_bet_result(row, decision)
         except Exception:
             continue  
 
-        pnl = _win_profit(stake, odds) if res == 1 else -stake
+        if res == 1:
+            pnl = _win_profit(stake, odds)
+        elif res == 0.5:
+            pnl = 0
+        else:
+            pnl = -stake
 
         bankroll += pnl
 
@@ -41,6 +85,8 @@ def run_backtest(df: pd.DataFrame, strategy, start_bankroll: float = 1000.0):
             "stake": stake,
             "pnl": pnl,
             "bankroll_after": bankroll,
+            "bet_type": decision.bet_type.value,
+            "bet_side": decision.bet_side.value if decision.bet_side else None,
         })
 
     bets = pd.DataFrame.from_records(records)

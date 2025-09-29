@@ -16,7 +16,10 @@ def max_drawdown(equity: pd.Series) -> float:
 
 
 def win_rate(results: pd.Series) -> float:
-        return float(results.mean())
+    non_push_results = results[results != 0.5]
+    if len(non_push_results) == 0:
+        return 0.0
+    return float(non_push_results.mean())
 
 
    
