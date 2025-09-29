@@ -22,7 +22,7 @@ class CustomTotalOver(Strategy):
         
         # Only bet over when total is above threshold
         if ou_line > self.threshold:
-            return BetDecision(self.unit, True, BetType.OVER_UNDER, BetSide.OVER)
+            return BetDecision(self.unit, True, bet_type=BetType.OVER_UNDER, bet_side=BetSide.OVER)
         
         return BetDecision(0.0, False)
 
@@ -47,6 +47,6 @@ class CustomTotalUnder(Strategy):
         
         # Only bet under when total is below threshold
         if ou_line < self.threshold:
-            return BetDecision(self.unit, True, BetType.OVER_UNDER, BetSide.UNDER)
+            return BetDecision(self.unit, True, bet_type=BetType.OVER_UNDER, bet_side=BetSide.UNDER)
         
         return BetDecision(0.0, False)
