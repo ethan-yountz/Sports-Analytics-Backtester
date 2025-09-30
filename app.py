@@ -13,9 +13,9 @@ from SRC.metrics import roi, win_rate, max_drawdown
 import altair as alt
 from pathlib import Path
 
-st.markdown("# Sports Analytics Backtester")
+st.markdown("<h1>Sports Analytics Backtester</h1>", unsafe_allow_html=True)
 
-st.markdown("## Multi-League Backtesting Platform")
+st.markdown("<h2>Multi-League Backtesting Platform</h2>", unsafe_allow_html=True)
 st.markdown("**NBA (2012-2019) • NHL (2022-2023) • MLB (2012-2023)**")
 
 bankroll = st.number_input("Starting Bankroll", value = 100, min_value=1, step = 10, key= "bankroll")
