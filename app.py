@@ -56,9 +56,9 @@ elif strat == "Custom Total Over/Under":
         st.info("Please select Over or Under to proceed")
 
 Df = None
-Data = st.selectbox("Select Data Set", ["", "NBA Complete Dataset (2012-2019)", "NHL Dataset (2022-2023)", "MLB Dataset (2012-2023)"])
+Data = st.selectbox("Select Data Set", ["", "NBA Dataset (2012-2019)", "NHL Dataset (2022-2023)", "MLB Dataset (2012-2023)"])
 
-if Data == "NBA Complete Dataset (2012-2019)":
+if Data == "NBA Dataset (2012-2019)":
     # Check if comprehensive processed data exists, if not create it
     processed_path = "Data/Processed/nba_complete_dataset.csv"
     
