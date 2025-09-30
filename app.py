@@ -13,7 +13,7 @@ from SRC.metrics import roi, win_rate, max_drawdown
 import altair as alt
 from pathlib import Path
 
-st.markdown("**Sports Analytics Backtester**")
+st.markdown("# **Sports Analytics Backtester**")
 st.markdown("---")
 
 st.markdown("**Multi-League Backtesting Platform**")
