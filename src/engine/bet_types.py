@@ -1,4 +1,4 @@
-from enum import Enum
+﻿from enum import Enum
 
 class BetType(Enum):
     MONEYLINE = "moneyline"
@@ -7,3 +7,5 @@ class BetType(Enum):
 class BetSide(Enum):
     OVER = "over"
     UNDER = "under"
+
+

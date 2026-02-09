@@ -1,15 +1,15 @@
-import streamlit as st
+﻿import streamlit as st
 import pandas as pd
-from SRC.backtester import run_backtest
-from SRC.Strategies.flat_underdog import FlatUnderdog
-from SRC.Strategies.flat_favorite import FlatFavorite
-from SRC.Strategies.flat_over_under import FlatOver, FlatUnder, LowTotalUnder
-from SRC.Strategies.custom_total import CustomTotalOver, CustomTotalUnder
-from SRC.data_loader import load_games
-from SRC.data_processor import process_vegas_data
-from SRC.nhl_processor import process_nhl_data
-from SRC.mlb_processor import process_mlb_data
-from SRC.metrics import roi, win_rate, max_drawdown
+from src.engine.backtester import run_backtest
+from src.strategies.flat_underdog import FlatUnderdog
+from src.strategies.flat_favorite import FlatFavorite
+from src.strategies.flat_over_under import FlatOver, FlatUnder, LowTotalUnder
+from src.strategies.custom_total import CustomTotalOver, CustomTotalUnder
+from src.data.data_loader import load_games
+from src.data.data_processor import process_vegas_data
+from src.data.nhl_processor import process_nhl_data
+from src.data.mlb_processor import process_mlb_data
+from src.engine.metrics import roi, win_rate, max_drawdown
 import altair as alt
 from pathlib import Path
 
@@ -17,7 +17,7 @@ st.markdown("<h1 style='font-size: 2.5em; font-weight: bold;'>Sports Analytics B
 st.markdown("---")
 
 st.markdown("**Multi-League Backtesting Platform**")
-st.markdown("**NBA (2012-2019) • NHL (2022-2023) • MLB (2012-2023)**")
+st.markdown("**NBA (2012-2019) â€¢ NHL (2022-2023) â€¢ MLB (2012-2023)**")
 
 bankroll = st.number_input("Starting Bankroll", value = 100, min_value=1, step = 10, key= "bankroll")
 unit = st.number_input("Unit Size", value = 1.0, min_value= 0.01, step = 0.1, key= "Unit")
@@ -60,58 +60,51 @@ Df = None
 Data = st.selectbox("Select Data Set", ["", "NBA Dataset (2012-2019)", "NHL Dataset (2022-2023)", "MLB Dataset (2012-2023)"])
 
 if Data == "NBA Dataset (2012-2019)":
-    # Check if comprehensive processed data exists, if not create it
-    processed_path = "Data/Processed/nba_complete_dataset.csv"
+    processed_path = "data/Processed/nba_complete_dataset.csv"
     
     if not Path(processed_path).exists():
         with st.spinner("Processing complete NBA dataset with moneyline, spread, and over/under..."):
-            # Process all NBA seasons
             all_seasons_data = []
             seasons = ["2012-13", "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19"]
             
             for season in seasons:
-                raw_path = f"Data/Raw/NBA/{season}/vegas.txt"
+                raw_path = f"data/Raw/NBA/{season}/vegas.txt"
                 if Path(raw_path).exists():
                     try:
-                        season_df = process_vegas_data(raw_path, f"Data/Processed/temp_{season}.csv")
+                        season_df = process_vegas_data(raw_path, f"data/Processed/temp_{season}.csv")
                         all_seasons_data.append(season_df)
                         st.write(f"Processed {season}: {len(season_df)} games")
                     except Exception as e:
                         st.write(f"Error processing {season}: {e}")
             
             if all_seasons_data:
-                # Combine all seasons
                 combined_df = pd.concat(all_seasons_data, ignore_index=True)
                 combined_df = combined_df.sort_values('date').reset_index(drop=True)
                 
-                # Save combined dataset
                 combined_df.to_csv(processed_path, index=False)
                 actual_games = len(combined_df) // 2
                 st.success(f"Created complete dataset with {len(combined_df)} betting records ({actual_games} games) from {len(all_seasons_data)} seasons")
                 
-                # Clean up temp files
                 for season in seasons:
-                    temp_path = f"Data/Processed/temp_{season}.csv"
+                    temp_path = f"data/Processed/temp_{season}.csv"
                     if Path(temp_path).exists():
                         Path(temp_path).unlink()
             else:
                 st.error("No NBA data found to process")
                 st.info("Falling back to existing moneyline data")
-                if Path("Data/Processed/games_clean.csv").exists():
-                    Df = load_games("Data/Processed/games_clean.csv")
+                if Path("data/Processed/games_clean.csv").exists():
+                    Df = load_games("data/Processed/games_clean.csv")
                 else:
                     st.error("No data available")
     
-    # Load the complete dataset
     if Path(processed_path).exists():
         Df = load_games(processed_path)
         actual_games = len(Df) // 2
         st.success(f"Loaded complete NBA dataset: {len(Df)} betting records ({actual_games} games)")
         
 elif Data == "NHL Dataset (2022-2023)":
-    # Check if NHL processed data exists, if not create it
-    nhl_processed_path = "Data/Processed/nhl_2022_2023.csv"
-    nhl_raw_path = "Data/Raw/NHL/sportsbook-nhl-2022-2023.csv"
+    nhl_processed_path = "data/Processed/nhl_2022_2023.csv"
+    nhl_raw_path = "data/Raw/NHL/sportsbook-nhl-2022-2023.csv"
     
     if not Path(nhl_processed_path).exists():
         if Path(nhl_raw_path).exists():
@@ -125,7 +118,6 @@ elif Data == "NHL Dataset (2022-2023)":
         else:
             st.error(f"NHL raw data not found at {nhl_raw_path}")
     
-    # Load the NHL dataset
     if Path(nhl_processed_path).exists():
         Df = load_games(nhl_processed_path)
         actual_games = len(Df) // 2
@@ -134,9 +126,8 @@ elif Data == "NHL Dataset (2022-2023)":
         st.error("Could not create NHL dataset")
 
 elif Data == "MLB Dataset (2012-2023)":
-    # Check if MLB processed data exists, if not create it
-    mlb_processed_path = "Data/Processed/mlb_dataset.csv"
-    mlb_raw_path = "Data/Raw/MLB/oddsDataMLB.csv"
+    mlb_processed_path = "data/Processed/mlb_dataset.csv"
+    mlb_raw_path = "data/Raw/MLB/oddsDataMLB.csv"
 
     if not Path(mlb_processed_path).exists():
         if Path(mlb_raw_path).exists():
@@ -149,9 +140,8 @@ elif Data == "MLB Dataset (2012-2023)":
                     st.info("Falling back to existing data if available")
         else:
             st.error(f"MLB raw data not found at {mlb_raw_path}")
-            st.info("Please download the MLB dataset from Kaggle and place it in Data/Raw/MLB/")
+            st.info("Please download the MLB dataset from Kaggle and place it in data/Raw/MLB/")
 
-    # Load the MLB dataset
     if Path(mlb_processed_path).exists():
         Df = load_games(mlb_processed_path)
         actual_games = len(Df) // 2
@@ -167,7 +157,7 @@ if run and Df is None:
 elif run and finalstrat is None:
     st.error("Please select a strategy and configure it properly")
 elif run and Df is not None and finalstrat is not None:
-    with st.spinner("Running backtest…"):
+    with st.spinner("Running backtestâ€¦"):
         bets, equity = run_backtest(Df, finalstrat, bankroll)
 
     left, right = st.columns([1, 1], gap="large")
@@ -181,7 +171,6 @@ elif run and Df is not None and finalstrat is not None:
             st.write(f"Win rate: {win_rate(bets['result']) * 100:.2f}%")
             st.write(f"Max drawdown: {max_drawdown(equity):.3f}")
             
-            # Show additional info for over/under strategies
             if strat in ["Always Over", "Always Under", "Custom Total Over/Under"] and 'ou_line' in bets.columns:
                 avg_total = bets['ou_line'].mean() if 'ou_line' in bets.columns else "N/A"
                 st.write(f"Average total line: {avg_total:.1f}")
@@ -218,3 +207,7 @@ elif run and Df is not None and finalstrat is not None:
     with right:
         st.caption("Equity Curve")
         st.altair_chart(equity_line + start_rule, use_container_width=True)
+
+
+
+

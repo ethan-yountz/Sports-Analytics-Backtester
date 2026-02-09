@@ -1,5 +1,5 @@
-from SRC.Strategies.base import Strategy, BetDecision
-from SRC.bet_types import BetType, BetSide
+﻿from src.strategies.base import Strategy, BetDecision
+from src.engine.bet_types import BetType, BetSide
 
 class CustomTotalOver(Strategy):
     name = "CustomTotalOver"
@@ -10,7 +10,6 @@ class CustomTotalOver(Strategy):
         self.threshold = threshold
 
     def decide(self, row) -> BetDecision:
-        # Check if we have over/under data
         if "ou_odds" not in row or "ou_line" not in row:
             return BetDecision(0.0, False)
         
@@ -20,7 +19,6 @@ class CustomTotalOver(Strategy):
         except Exception:
             return BetDecision(0.0, False)
         
-        # Only bet over when total is above threshold
         if ou_line > self.threshold:
             return BetDecision(self.unit, True, bet_type=BetType.OVER_UNDER, bet_side=BetSide.OVER)
         
@@ -35,7 +33,6 @@ class CustomTotalUnder(Strategy):
         self.threshold = threshold
 
     def decide(self, row) -> BetDecision:
-        # Check if we have over/under data
         if "ou_odds" not in row or "ou_line" not in row:
             return BetDecision(0.0, False)
         
@@ -45,8 +42,9 @@ class CustomTotalUnder(Strategy):
         except Exception:
             return BetDecision(0.0, False)
         
-        # Only bet under when total is below threshold
         if ou_line < self.threshold:
             return BetDecision(self.unit, True, bet_type=BetType.OVER_UNDER, bet_side=BetSide.UNDER)
         
         return BetDecision(0.0, False)
+
+

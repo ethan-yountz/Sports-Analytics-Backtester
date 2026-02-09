@@ -1,4 +1,4 @@
-import pandas as pd
+﻿import pandas as pd
 import numpy as np
 from pathlib import Path
 
@@ -69,11 +69,12 @@ def process_vegas_data(raw_data_path: str, output_path: str = None):
     return processed_df
 
 if __name__ == "__main__":
-    # Example usage
-    raw_path = "Data/Raw/NBA/2012-13/vegas.txt"
-    output_path = "Data/Processed/games_with_spread_ou.csv"
+    raw_path = "data/Raw/NBA/2012-13/vegas.txt"
+    output_path = "data/Processed/games_with_spread_ou.csv"
     
     if Path(raw_path).exists():
         process_vegas_data(raw_path, output_path)
     else:
         print(f"Raw data file not found: {raw_path}")
+
+

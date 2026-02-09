@@ -1,11 +1,20 @@
-# Python cache
+﻿# Python cache
 __pycache__/
-*.pyc
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
 
 # Virtual environments
 .venv/
 env/
 venv/
+ENV/
 
-# Streamlit Cloud often doesn’t need these
+# Notebook artifacts
+.ipynb_checkpoints/
+
+# OS
 .DS_Store
+Thumbs.db

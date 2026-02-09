@@ -1,7 +1,7 @@
-from SRC.Strategies.base import Strategy, BetDecision
+﻿from src.strategies.base import Strategy, BetDecision
 
-class FlatUnderdog(Strategy):
-    name = "FlatUnderdog"
+class FlatFavorite(Strategy):
+    name = "FlatFavorite"
     def __init__(self, unit=1.0, odds_col="odds"):
         self.unit = unit
         self.odds_col = odds_col
@@ -12,5 +12,6 @@ class FlatUnderdog(Strategy):
             odds = float(odds)
         except Exception:
             return BetDecision(0.0, False)
-        return BetDecision(self.unit, True) if odds > 0 else BetDecision(0.0, False)
+        return BetDecision(self.unit, True) if odds < -110 else BetDecision(0.0, False)
+
 

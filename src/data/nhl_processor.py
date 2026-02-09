@@ -1,4 +1,4 @@
-import pandas as pd
+﻿import pandas as pd
 import numpy as np
 from pathlib import Path
 
@@ -44,7 +44,6 @@ def process_nhl_data(raw_data_path: str, output_path: str = None):
             'location': 'home'
         })
         
-        # Create records for away team
         processed_records.append({
             'date': date,
             'selection': away_team,
@@ -70,10 +69,12 @@ def process_nhl_data(raw_data_path: str, output_path: str = None):
     return processed_df
 
 if __name__ == "__main__":
-    raw_path = "Data/Raw/NHL/sportsbook-nhl-2022-2023.csv"
-    output_path = "Data/Processed/nhl_2022_2023.csv"
+    raw_path = "data/Raw/NHL/sportsbook-nhl-2022-2023.csv"
+    output_path = "data/Processed/nhl_2022_2023.csv"
     
     if Path(raw_path).exists():
         process_nhl_data(raw_path, output_path)
     else:
         print(f"Raw NHL data file not found: {raw_path}")
+
+

@@ -1,4 +1,4 @@
-import pandas as pd
+﻿import pandas as pd
 import numpy as np
 from pathlib import Path
 
@@ -62,10 +62,12 @@ def process_mlb_data(raw_data_path: str, output_path: str = None):
     return processed_df
 
 if __name__ == "__main__":
-    raw_path = "Data/Raw/MLB/oddsDataMLB.csv"
-    output_path = "Data/Processed/mlb_dataset.csv"
+    raw_path = "data/Raw/MLB/oddsDataMLB.csv"
+    output_path = "data/Processed/mlb_dataset.csv"
     
     if Path(raw_path).exists():
         process_mlb_data(raw_path, output_path)
     else:
         print(f"Raw MLB data not found at {raw_path}")
+
+

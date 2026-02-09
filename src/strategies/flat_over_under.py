@@ -1,5 +1,5 @@
-from SRC.Strategies.base import Strategy, BetDecision
-from SRC.bet_types import BetType, BetSide
+﻿from src.strategies.base import Strategy, BetDecision
+from src.engine.bet_types import BetType, BetSide
 
 class FlatOver(Strategy):
     name = "FlatOver"
@@ -9,7 +9,6 @@ class FlatOver(Strategy):
         self.unit = unit
 
     def decide(self, row) -> BetDecision:
-        # Check if we have over/under data
         if "ou_odds" not in row or "ou_line" not in row:
             return BetDecision(0.0, False)
         
@@ -19,7 +18,6 @@ class FlatOver(Strategy):
         except Exception:
             return BetDecision(0.0, False)
         
-        # Always bet over
         return BetDecision(self.unit, True, BetType.OVER_UNDER, BetSide.OVER)
 
 class FlatUnder(Strategy):
@@ -30,7 +28,6 @@ class FlatUnder(Strategy):
         self.unit = unit
 
     def decide(self, row) -> BetDecision:
-        # Check if we have over/under data
         if "ou_odds" not in row or "ou_line" not in row:
             return BetDecision(0.0, False)
         
@@ -40,7 +37,6 @@ class FlatUnder(Strategy):
         except Exception:
             return BetDecision(0.0, False)
         
-        # Always bet under
         return BetDecision(self.unit, True, BetType.OVER_UNDER, BetSide.UNDER)
 
 class LowTotalUnder(Strategy):
@@ -52,7 +48,6 @@ class LowTotalUnder(Strategy):
         self.threshold = threshold
 
     def decide(self, row) -> BetDecision:
-        # Check if we have over/under data
         if "ou_odds" not in row or "ou_line" not in row:
             return BetDecision(0.0, False)
         
@@ -62,8 +57,9 @@ class LowTotalUnder(Strategy):
         except Exception:
             return BetDecision(0.0, False)
         
-        # Only bet under when total is below threshold
         if ou_line < self.threshold:
             return BetDecision(self.unit, True, BetType.OVER_UNDER, BetSide.UNDER)
         
         return BetDecision(0.0, False)
+
+

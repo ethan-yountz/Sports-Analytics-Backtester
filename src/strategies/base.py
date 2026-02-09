@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from SRC.bet_types import BetType, BetSide
+﻿from dataclasses import dataclass
+from src.engine.bet_types import BetType, BetSide
 
 @dataclass
 class BetDecision:
@@ -14,3 +14,5 @@ class Strategy:
     
     def decide(self, row) -> BetDecision:
         raise NotImplementedError
+
+

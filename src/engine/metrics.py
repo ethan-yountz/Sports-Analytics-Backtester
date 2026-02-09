@@ -1,4 +1,4 @@
-import numpy as np
+﻿import numpy as np
 import pandas as pd
 
 def roi(pnl: pd.Series, stake: pd.Series | None = None) -> float:
@@ -23,4 +23,6 @@ def win_rate(results: pd.Series) -> float:
 
 
    
+
+
 
