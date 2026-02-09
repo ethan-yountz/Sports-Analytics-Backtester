@@ -3,10 +3,10 @@ from src.engine.bet_types import BetType, BetSide
 
 @dataclass
 class BetDecision:
-    stake: float      # units
-    take: bool        # place bet or skip
+    stake: float      # stake size in units
+    take: bool        # whether to place the bet
     bet_type: BetType = BetType.MONEYLINE
-    bet_side: BetSide = None  # For spread/OU bets
+    bet_side: BetSide = None  # side used for spread/OU bets
 
 class Strategy:
     name = "BASE"

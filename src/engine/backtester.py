@@ -1,5 +1,5 @@
 ﻿import pandas as pd
-from src.engine.utils import payout_per_unit  # net profit per 1 unit from American odds
+from src.engine.utils import payout_per_unit  # net profit per unit staked from American odds
 from src.engine.bet_types import BetType, BetSide
 
 def _win_profit(stake: float, odds: int) -> float:
@@ -10,7 +10,7 @@ def _determine_bet_result(row, decision):
     bet_side = decision.bet_side
     
     if bet_type == BetType.MONEYLINE:
-        return int(row["result"])  # 1 = win, 0 = loss
+        return int(row["result"])  # 1 is win, 0 is loss
     
     elif bet_type == BetType.OVER_UNDER:
         if "ou_result" not in row:
@@ -99,6 +99,7 @@ def run_backtest(df: pd.DataFrame, strategy, start_bankroll: float = 1000.0):
     equity.name = "equity"
 
     return bets, equity
+
 
 
 
