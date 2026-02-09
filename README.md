@@ -1,4 +1,4 @@
-## Sports Analytics Backtester 🏀
+## Sports Analytics Backtester 
 
 Live app: https://sports-analytics-backtester.streamlit.app/
 
