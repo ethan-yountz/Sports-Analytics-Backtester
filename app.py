@@ -17,7 +17,7 @@ st.markdown("<h1 style='font-size: 2.5em; font-weight: bold;'>Sports Analytics B
 st.markdown("---")
 
 st.markdown("**Multi-League Backtesting Platform**")
-st.markdown("**NBA (2012-2019) â€¢ NHL (2022-2023) â€¢ MLB (2012-2023)**")
+st.markdown("**NBA (2012-2019) - NHL (2022-2023) - MLB (2012-2023)**")
 
 bankroll = st.number_input("Starting Bankroll", value = 100, min_value=1, step = 10, key= "bankroll")
 unit = st.number_input("Unit Size", value = 1.0, min_value= 0.01, step = 0.1, key= "Unit")
@@ -57,7 +57,7 @@ elif strat == "Custom Total Over/Under":
         st.info("Please select Over or Under to proceed")
 
 Df = None
-Data = st.selectbox("Select Data Set", ["", "NBA Dataset (2012-2019)", "NHL Dataset (2022-2023)", "MLB Dataset (2012-2023)"])
+Data = st.selectbox("Select Dataset", ["", "NBA Dataset (2012-2019)", "NHL Dataset (2022-2023)", "MLB Dataset (2012-2023)"])
 
 if Data == "NBA Dataset (2012-2019)":
     processed_path = "data/Processed/nba_complete_dataset.csv"
@@ -157,7 +157,7 @@ if run and Df is None:
 elif run and finalstrat is None:
     st.error("Please select a strategy and configure it properly")
 elif run and Df is not None and finalstrat is not None:
-    with st.spinner("Running backtestâ€¦"):
+    with st.spinner("Running backtest..."):
         bets, equity = run_backtest(Df, finalstrat, bankroll)
 
     left, right = st.columns([1, 1], gap="large")
